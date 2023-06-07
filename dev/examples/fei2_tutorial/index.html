@@ -131,21 +131,22 @@ for i in 1:10_000
     step!(sys_supercell, langevin)
 end
 
-plot_spins(sys_supercell; arrowlength=2.5, linewidth=0.75, arrowsize=1.5)</code></pre><p><img src="../fei2_tutorial-38.png" alt/></p><h2 id="Linear-spin-wave-theory"><a class="docs-heading-anchor" href="#Linear-spin-wave-theory">Linear spin wave theory</a><a id="Linear-spin-wave-theory-1"></a><a class="docs-heading-anchor-permalink" href="#Linear-spin-wave-theory" title="Permalink"></a></h2><p>Now that we have found the ground state for a magnetic supercell, we can immediately proceed to perform zero-temperature calculations using linear spin wave theory. We begin by instantiating a <code>SpinWaveTheory</code> type using the supercell.</p><pre><code class="language-julia hljs">swt = SpinWaveTheory(sys_supercell);</code></pre><p>The dispersion relation can be determined providing <code>dispersion</code> with a <code>SpinWaveTheory</code> and a list of wave vectors. For each wave vector, <code>dispersion</code> will return a list of energies, one for each band. Frequently one wants to dispersion information along lines that connect special wave vectors. The function <a href="../../library/#Sunny.connected_path-Tuple{Vector, Any}"><code>connected_path</code></a> linearly samples between provided <span>$q$</span>-points, with a given sample density.</p><pre><code class="language-julia hljs">points = [[0,   0, 0],  # List of wave vectors that define a path
+plot_spins(sys_supercell; arrowlength=2.5, linewidth=0.75, arrowsize=1.5)</code></pre><p><img src="../fei2_tutorial-38.png" alt/></p><h2 id="Linear-spin-wave-theory"><a class="docs-heading-anchor" href="#Linear-spin-wave-theory">Linear spin wave theory</a><a id="Linear-spin-wave-theory-1"></a><a class="docs-heading-anchor-permalink" href="#Linear-spin-wave-theory" title="Permalink"></a></h2><p>Now that we have found the ground state for a magnetic supercell, we can immediately proceed to perform zero-temperature calculations using linear spin wave theory. We begin by instantiating a <code>SpinWaveTheory</code> type using the supercell.</p><pre><code class="language-julia hljs">swt = SpinWaveTheory(sys_supercell);</code></pre><p>The dispersion relation can be determined providing <code>dispersion</code> with a <code>SpinWaveTheory</code> and a list of wave vectors. For each wave vector, <code>dispersion</code> will return a list of energies, one for each band. Frequently one wants to dispersion information along lines that connect special wave vectors. The function <a href="../../library/#Sunny.connected_path-Tuple{Any, Vector, Any}"><code>connected_path</code></a> linearly samples between provided <span>$q$</span>-points, with a given sample density.</p><pre><code class="language-julia hljs">points = [[0,   0, 0],  # List of wave vectors that define a path
           [1,   0, 0],
           [0,   1, 0],
           [1/2, 0, 0],
           [0,   1, 0],
           [0,   0, 0]]
 labels = [&quot;($(p[1]),$(p[2]),$(p[3]))&quot; for p in points]
-density = 80
-path, markers = connected_path(points, density);</code></pre><p><code>dispersion</code> may now be called on the wave vectors along the generated path. Each row column of the returned matrix corresponds to a single mode.</p><pre><code class="language-julia hljs">disp = dispersion(swt, path)
+density = 200
+path, markers = connected_path(swt, points, density);</code></pre><p><code>dispersion</code> may now be called on the wave vectors along the generated path. Each row column of the returned matrix corresponds to a single mode.</p><pre><code class="language-julia hljs">disp = dispersion(swt, path)
 
 fig = Figure()
 ax = Axis(fig[1,1]; xlabel=&quot;𝐪&quot;, ylabel=&quot;Energy (meV)&quot;,
-    xticks=(markers, labels), xticklabelrotation=π/8,
+    xticks=(markers, labels), xticklabelrotation=π/6,
 )
 ylims!(ax, 0.0, 7.5)
+xlims!(ax, 1, size(disp, 1))
 for i in axes(disp)[2]
     lines!(ax, 1:length(disp[:,i]), disp[:,i]; color=:blue)
 end
@@ -178,14 +179,14 @@ is = intensities(sf, qs, :trace; kT)
 fig = lines(ωs(sf), is[1,:]; axis=(xlabel=&quot;meV&quot;, ylabel=&quot;Intensity&quot;), label=&quot;(0,0,0)&quot;)
 lines!(ωs(sf), is[2,:]; label=&quot;(π,π,π)&quot;)
 axislegend()
-fig</code></pre><p><img src="../fei2_tutorial-64.png" alt/></p><p>Frequently one wants to extract energy intensities along lines that connect special wave vectors. The function <a href="../../library/#Sunny.connected_path-Tuple{Vector, Any}"><code>connected_path</code></a> linearly samples between provided <span>$q$</span>-points, with a given sample density.</p><pre><code class="language-julia hljs">points = [[0,   0, 0],  # List of wave vectors that define a path
+fig</code></pre><p><img src="../fei2_tutorial-64.png" alt/></p><p>Frequently one wants to extract energy intensities along lines that connect special wave vectors. The function <a href="../../library/#Sunny.connected_path-Tuple{Any, Vector, Any}"><code>connected_path</code></a> linearly samples between provided <span>$q$</span>-points, with a given sample density.</p><pre><code class="language-julia hljs">points = [[0,   0, 0],  # List of wave vectors that define a path
           [1,   0, 0],
           [0,   1, 0],
           [1/2, 0, 0],
           [0,   1, 0],
           [0,   0, 0]]
 density = 40
-path, markers = connected_path(points, density);</code></pre><p>Calculate and plot the intensities along this path using <a href="../../library/#Sunny.FormFactor-Tuple{Int64, Union{Nothing, String}}"><code>FormFactor</code></a> corrections appropriate for <code>Fe2</code> magnetic ions.</p><pre><code class="language-julia hljs">formfactors = [FormFactor(1, &quot;Fe2&quot;; g_lande=3/2)]
+path, markers = connected_path(sf, points, density);</code></pre><p>Calculate and plot the intensities along this path using <a href="../../library/#Sunny.FormFactor-Tuple{Int64, Union{Nothing, String}}"><code>FormFactor</code></a> corrections appropriate for <code>Fe2</code> magnetic ions.</p><pre><code class="language-julia hljs">formfactors = [FormFactor(1, &quot;Fe2&quot;; g_lande=3/2)]
 
 is = intensities(sf, path, :perp;
     interpolation = :linear,       # Interpolate between available wave vectors
@@ -197,7 +198,7 @@ is = broaden_energy(sf, is, (ω, ω₀)-&gt;lorentzian(ω-ω₀, 0.05))  # Add a
 labels = [&quot;($(p[1]),$(p[2]),$(p[3]))&quot; for p in points]
 
 heatmap(1:size(is,1), ωs(sf), is;
-    colorrange=(0.0, 3.5),
+    colorrange=(0.0, 4.0),
     axis = (
         ylabel = &quot;meV&quot;,
         xticks = (markers, labels),
@@ -241,4 +242,4 @@ hm</code></pre><p><img src="../fei2_tutorial-72.png" alt/></p><p>Finally, we not
 hm = heatmap(is_static; axis=(title=&quot;Instantaneous Structure Factor&quot;, aspect=true))
 Colorbar(hm.figure[1,2], hm.plot)
 hidedecorations!(hm.axis); hidespines!(hm.axis)
-hm</code></pre><p><img src="../fei2_tutorial-74.png" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../quick-start/">« Quick Start</a><a class="docs-footer-nextpage" href="../powder_averaging/">Powder Averaging »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 1 June 2023 21:10">Thursday 1 June 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+hm</code></pre><p><img src="../fei2_tutorial-74.png" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../quick-start/">« Quick Start</a><a class="docs-footer-nextpage" href="../powder_averaging/">Powder Averaging »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Wednesday 7 June 2023 00:36">Wednesday 7 June 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
