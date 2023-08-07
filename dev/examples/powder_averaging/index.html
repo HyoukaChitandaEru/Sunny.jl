@@ -36,9 +36,27 @@ Intensity(ω) reported
 </code></pre><p>First, we consider the &quot;single crystal&quot; results. Use <a href="../../library/#Sunny.connected_path_from_rlu-Tuple{Crystal, Vector, Any}"><code>connected_path_from_rlu</code></a> to construct a path that connects high-symmetry points in reciprocal space. The <a href="../../library/#Sunny.intensities_broadened-Tuple{SpinWaveTheory, Any, Any, Any}"><code>intensities_broadened</code></a> function collects intensities along this path for the given set of energy (<span>$ħω$</span>) values.</p><pre><code class="language-julia hljs">qpoints = [[0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [0.5, 0.5, 0.0], [0.0, 0.0, 0.0]]
 path, xticks = connected_path_from_rlu(crystal, qpoints, 50)
 energies = collect(0:0.01:6)
-is = intensities_broadened(swt, path, energies, formula)
-
-fig = Figure()
+is = intensities_broadened(swt, path, energies, formula)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">63×601 Matrix{Float64}:
+ 8.05998e-5  8.05174e-5  8.02572e-5  7.98226e-5  …  2.01694e-7   2.01024e-7
+ 0.0160592   0.0165177   0.016973    0.0174223      5.62363e-5   5.6044e-5
+ 0.0185975   0.019224    0.0198735   0.0205463      0.00011937   0.000118949
+ 0.016437    0.0169258   0.0174339   0.0179622      0.000190391  0.000189701
+ 0.0139627   0.0143135   0.0146768   0.015053       0.000270426  0.000269414
+ 0.0119491   0.0122044   0.0124676   0.0127389   …  0.00036075   0.000359356
+ 0.010396    0.0105878   0.0107848   0.0109872      0.000462807  0.000460961
+ 0.00919733  0.00934632  0.00949888  0.00965512     0.000578231  0.000575847
+ 0.00826001  0.00837917  0.00850089  0.00862522     0.000708864  0.000705842
+ 0.00751584  0.0076136   0.00771325  0.00781484     0.000856778  0.000852997
+ ⋮                                               ⋱               ⋮
+ 0.00753495  0.00764616  0.0077598   0.00787595     0.000607969  0.000605395
+ 0.00838135  0.00852005  0.00866214  0.00880774  …  0.000497831  0.00049579
+ 0.00946147  0.00963955  0.00982253  0.0100106      0.000399793  0.000398206
+ 0.0108563   0.0110924   0.0113359   0.0115871      0.000312542  0.00031134
+ 0.0126533   0.012976    0.0133103   0.0136567      0.000234881  0.000234004
+ 0.0148323   0.015278    0.0157414   0.0162232      0.000165725  0.000165125
+ 0.0166514   0.0172136   0.0177961   0.0183991   …  0.000104097  0.000103731
+ 0.0141869   0.0145872   0.0149837   0.0153741      4.9118e-5    4.89502e-5
+ 8.05998e-5  8.05174e-5  8.02572e-5  7.98226e-5     2.01694e-7   2.01024e-7</code></pre><p>Plot the results</p><pre><code class="language-julia hljs">fig = Figure()
 ax = Axis(fig[1,1]; aspect=1.4, ylabel=&quot;ω (meV)&quot;, xlabel=&quot;𝐪 (RLU)&quot;,
           xticks, xticklabelrotation=π/10)
 heatmap!(ax, 1:size(is, 1), energies, is, colormap=:gnuplot2)
