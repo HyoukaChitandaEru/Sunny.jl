@@ -57,7 +57,8 @@ set_exchange!(sys, [J′2apm 0.0    0.0;
 
 D = 2.165
 S = spin_operators(sys, 1)
-set_onsite_coupling!(sys, -D*S[3]^2, 1)
+set_onsite_coupling!(sys, -D*S[3]^2, 1);
+sys#hide
 
 randomize_spins!(sys)
 minimize_energy!(sys);
@@ -69,6 +70,7 @@ print_wrapped_intensities(sys)
 suggest_magnetic_supercell([[0, -1/4, 1/4]], sys.latsize)
 
 sys_min = reshape_supercell(sys, [1 0 0; 0 1 -2; 0 1 2])
+
 randomize_spins!(sys_min)
 minimize_energy!(sys_min)
 plot_spins(sys_min; ghost_radius=3)
