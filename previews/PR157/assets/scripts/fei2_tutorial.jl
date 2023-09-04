@@ -12,6 +12,8 @@ FeI2 = Crystal(latvecs, positions; types)
 
 cryst = subcrystal(FeI2, "Fe")
 
+plot_crystal(cryst, 8.0)
+
 print_symmetry_table(cryst, 8.0)
 
 sys = System(cryst, (4,4,4), [SpinInfo(1, S=1, g=2)], :SUN, seed=2)
