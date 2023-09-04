@@ -76,7 +76,7 @@ sys_min = reshape_supercell(sys, [1 0 0; 0 1 -2; 0 1 2])
 randomize_spins!(sys_min)
 minimize_energy!(sys_min)
 
-plot_spins(sys_min; color=[s[3] for s in sys_min.dipoles], ghost_radius=3)
+plot_spins(sys_min; color=[s[3] for s in sys_min.dipoles], ghost_radius=12)
 
 swt = SpinWaveTheory(sys_min)
 
