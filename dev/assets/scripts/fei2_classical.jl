@@ -53,7 +53,7 @@ end
 minimize_energy!(sys)
 print_wrapped_intensities(sys)
 
-plot_spins(sys)
+plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
 for _ in 1:10_000
     step!(sys, langevin)
@@ -65,7 +65,7 @@ kT = 3.5 * meV_per_K     # 3.5K ≈ 0.30 meV
 langevin.kT = kT;
 
 sys_large = resize_supercell(sys, (16,16,4)) # 16x16x4 copies of the original unit cell
-plot_spins(sys_large)
+plot_spins(sys_large; color=[s[3] for s in sys_large.dipoles])
 
 # At the new temperature
 for _ in 1:10_000

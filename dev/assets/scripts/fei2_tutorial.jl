@@ -12,6 +12,8 @@ FeI2 = Crystal(latvecs, positions; types)
 
 cryst = subcrystal(FeI2, "Fe")
 
+view_crystal(cryst, 8.0)
+
 print_symmetry_table(cryst, 8.0)
 
 sys = System(cryst, (4,4,4), [SpinInfo(1, S=1, g=2)], :SUN, seed=2)
@@ -64,6 +66,8 @@ minimize_energy!(sys);
 
 plot_spins(sys)
 
+plot_spins(sys; color=[s[3] for s in sys.dipoles])
+
 print_wrapped_intensities(sys)
 
 suggest_magnetic_supercell([[0, -1/4, 1/4]], sys.latsize)
@@ -71,7 +75,8 @@ suggest_magnetic_supercell([[0, -1/4, 1/4]], sys.latsize)
 sys_min = reshape_supercell(sys, [1 0 0; 0 1 -2; 0 1 2])
 randomize_spins!(sys_min)
 minimize_energy!(sys_min)
-plot_spins(sys_min; ghost_radius=3)
+
+plot_spins(sys_min; color=[s[3] for s in sys_min.dipoles], ghost_radius=12)
 
 swt = SpinWaveTheory(sys_min)
 
