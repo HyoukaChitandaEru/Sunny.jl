@@ -12,7 +12,7 @@ FeI2 = Crystal(latvecs, positions; types)
 
 cryst = subcrystal(FeI2, "Fe")
 
-plot_crystal(cryst, 8.0)
+view_crystal(cryst, 8.0)
 
 print_symmetry_table(cryst, 8.0)
 

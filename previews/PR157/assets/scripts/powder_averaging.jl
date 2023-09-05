@@ -4,7 +4,7 @@ a = 8.5031 # (Å)
 latvecs = lattice_vectors(a, a, a, 90, 90, 90)
 cryst = Crystal(latvecs, [[0,0,0]], 227, setting="1")
 
-plot_crystal(cryst, 8.0)
+view_crystal(cryst, 8.0)
 
 latsize = (1,1,1)
 seed = 0
