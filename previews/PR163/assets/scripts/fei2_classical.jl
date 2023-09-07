@@ -53,6 +53,7 @@ end
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
 sys_large = resize_supercell(sys, (16,16,4)) # 16x16x4 copies of the original unit cell
+plot_spins(sys_large; color=[s[3] for s in sys.dipoles])
 
 kT = 3.5 * meV_per_K     # 3.5K ≈ 0.30 meV
 langevin.kT = kT
