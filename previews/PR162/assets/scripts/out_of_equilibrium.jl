@@ -1,6 +1,6 @@
 using Sunny, GLMakie
 
-lat_vecs = Sunny.lattice_vectors(1.0, 1.0, 2.0, 90, 90, 120)
+lat_vecs = lattice_vectors(1.0, 1.0, 2.0, 90, 90, 120)
 basis_vecs = [[0,0,0]]
 cryst = Crystal(lat_vecs, basis_vecs)
 
@@ -25,7 +25,7 @@ h = 15.5
 field = set_external_field!(sys, [0.0 0.0 h]);
 
 D = 19.0
-Sz = Sunny.spin_operators(sys, 1)[3]
+Sz = spin_operators(sys, 1)[3]
 set_onsite_coupling!(sys, D*Sz^2, 1);
 
 randomize_spins!(sys)

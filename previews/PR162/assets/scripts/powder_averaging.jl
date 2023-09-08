@@ -19,7 +19,8 @@ minimize_energy!(sys)
 energy_per_site = energy(sys) / length(eachsite(sys))
 @assert energy_per_site ≈ -2J*S^2
 
-plot_spins(sys; ghost_radius=12)
+s0 = sys.dipoles[1,1,1,1]
+plot_spins(sys; ghost_radius=12, color=[s'*s0 for s in sys.dipoles])
 
 swt = SpinWaveTheory(sys)
 η = 0.4 # (meV)
