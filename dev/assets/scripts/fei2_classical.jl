@@ -46,35 +46,24 @@ kT = 0.2       # Temperature of the thermal bath (meV).
 langevin = Langevin(Δt; kT, λ);
 
 randomize_spins!(sys)
-for _ in 1:1_000
+for _ in 1:20_000
     step!(sys, langevin)
 end
-
-minimize_energy!(sys)
-print_wrapped_intensities(sys)
 
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
-
-for _ in 1:10_000
-    step!(sys, langevin)
-end
-minimize_energy!(sys)
-print_wrapped_intensities(sys)
-
-kT = 3.5 * meV_per_K     # 3.5K ≈ 0.30 meV
-langevin.kT = kT;
 
 sys_large = resize_supercell(sys, (16,16,4)) # 16x16x4 copies of the original unit cell
 plot_spins(sys_large; color=[s[3] for s in sys_large.dipoles])
 
-# At the new temperature
+kT = 3.5 * meV_per_K     # 3.5K ≈ 0.30 meV
+langevin.kT = kT
 for _ in 1:10_000
     step!(sys_large, langevin)
 end
 
 sc = dynamical_correlations(sys_large; Δt=2Δt, nω=120, ωmax=7.5)
 
-add_sample!(sc, sys_large)
+add_sample!(sc, sys_large)        # Accumulate the sample into `sc`
 
 for _ in 1:2
     for _ in 1:1000               # Enough steps to decorrelate spins
@@ -85,7 +74,7 @@ end
 
 sc
 
-formula = intensity_formula(sc, :trace; kT = kT)
+formula = intensity_formula(sc, :trace; kT)
 
 qs = [[0, 0, 0], [0.5, 0.5, 0.5]]
 is = intensities_interpolated(sc, qs, formula; interpolation = :round)
@@ -97,7 +86,7 @@ axislegend()
 fig
 
 formfactors = [FormFactor("Fe2"; g_lande=3/2)]
-new_formula = intensity_formula(sc, :perp; kT = kT, formfactors = formfactors)
+new_formula = intensity_formula(sc, :perp; kT, formfactors = formfactors)
 
 points = [[0,   0, 0],  # List of wave vectors that define a path
           [1,   0, 0],
@@ -145,7 +134,6 @@ fig
 
 ωidx = 60
 target_ω = ωs[ωidx]
-println("target_ω = $(target_ω)")#hide
 
 params = unit_resolution_binning_parameters(sc)
 params.binstart[1:2] .= -1 # Expand plot range slightly
@@ -157,7 +145,8 @@ params.binend[4] = target_ω # `binend` should be inside (e.g. at the center) of
 params.binwidth[4] = omega_width
 
 integrate_axes!(params, axes = 3) # Integrate out z direction entirely
-params#hide
+
+params
 
 is, counts = intensities_binned(sc,params,new_formula)
 
