@@ -61,10 +61,7 @@ D = 2.165
 S = spin_operators(sys, 1)
 set_onsite_coupling!(sys, -D*S[3]^2, 1)
 
-randomize_spins!(sys)
-minimize_energy!(sys);
-
-plot_spins(sys)
+minimize_energy!(sys)
 
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
