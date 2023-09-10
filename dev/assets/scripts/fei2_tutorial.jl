@@ -68,7 +68,7 @@ plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
 print_wrapped_intensities(sys)
 
-println(suggest_magnetic_supercell([[0, -1/4, 1/4]]))
+suggest_magnetic_supercell([[0, -1/4, 1/4]])
 
 sys_min = reshape_supercell(sys, [1 0 0; 0 2 1; 0 -2 1])
 randomize_spins!(sys_min)
