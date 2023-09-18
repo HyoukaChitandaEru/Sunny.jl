@@ -90,7 +90,7 @@ formula = intensity_formula(swt, :perp; kernel=delta_function_kernel)
 disp, intensity = intensities_bands(swt, path, formula);
 
 fig = Figure()
-ax = Axis(fig[1,1]; xlabel="𝐪", ylabel="Energy (meV)", xticks, xticklabelrotation=π/6)
+ax = Axis(fig[1,1]; xlabel="Momentum (r.l.u.)", ylabel="Energy (meV)", xticks, xticklabelrotation=π/6)
 ylims!(ax, 0.0, 7.5)
 xlims!(ax, 1, size(disp, 1))
 colorrange = extrema(intensity)
@@ -111,7 +111,7 @@ is3 = intensities_broadened(swt, [R*R*q for q in path], energies, broadened_form
 is_averaged = (is1 + is2 + is3) / 3
 
 fig = Figure()
-ax = Axis(fig[1,1]; xlabel="(H,0,0)", ylabel="Energy (meV)", xticks, xticklabelrotation=π/6)
+ax = Axis(fig[1,1]; xlabel="Momentum (r.l.u.)", ylabel="Energy (meV)", xticks, xticklabelrotation=π/6)
 heatmap!(ax, 1:size(is_averaged, 1), energies, is_averaged)
 fig
 
