@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Fitting model parameters in a 1D spin-1 ferromagnetic chain · Sunny documentation</title><meta name="title" content="Fitting model parameters in a 1D spin-1 ferromagnetic chain · Sunny documentation"/><meta property="og:title" content="Fitting model parameters in a 1D spin-1 ferromagnetic chain · Sunny documentation"/><meta property="twitter:title" content="Fitting model parameters in a 1D spin-1 ferromagnetic chain · Sunny documentation"/><meta name="description" content="Documentation for Sunny documentation."/><meta property="og:description" content="Documentation for Sunny documentation."/><meta property="twitter:description" content="Documentation for Sunny documentation."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="Sunny documentation logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Sunny documentation</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Overview</a></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../fei2_tutorial/">Case Study: FeI<span>$_{2}$</span></a></li><li><a class="tocitem" href="../out_of_equilibrium/">CP<span>$^2$</span> Skyrmion Quench</a></li><li><a class="tocitem" href="../powder_averaging/">Powder averaged CoRh<span>$_2$</span>O<span>$_4$</span></a></li><li><a class="tocitem" href="../fei2_classical/">Structure Factors with Classical Dynamics</a></li><li><a class="tocitem" href="../ising2d/">Classical Ising model</a></li><li class="is-active"><a class="tocitem" href>Fitting model parameters in a 1D spin-1 ferromagnetic chain</a><ul class="internal"><li><a class="tocitem" href="#Creating-simulated-&quot;experiment&quot;-data-using-Landau-Lifschitz-dynamics"><span>Creating simulated &quot;experiment&quot; data using Landau-Lifschitz dynamics</span></a></li><li><a class="tocitem" href="#Fitting-to-the-experiment-data"><span>Fitting to the experiment data</span></a></li><li><a class="tocitem" href="#Spin-wave-calculation"><span>Spin wave calculation</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../library/">Library API</a></li><li><a class="tocitem" href="../../structure-factor/">Structure Factor Calculations</a></li><li><a class="tocitem" href="../../anisotropy/">Single-Ion Anisotropy</a></li><li><a class="tocitem" href="../../writevtk/">Volumetric Rendering with ParaView</a></li><li><a class="tocitem" href="../../parallelism/">Parallel Computation</a></li><li><a class="tocitem" href="../../versions/">Version History</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Fitting model parameters in a 1D spin-1 ferromagnetic chain</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Fitting model parameters in a 1D spin-1 ferromagnetic chain</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SunnySuite/Sunny.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SunnySuite/Sunny.jl/blob/main/examples/one_dim_chain.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page">Download this example as <a href="../../assets/notebooks/one_dim_chain.ipynb" download><u>Jupyter notebook</u></a>
+or <a href="../../assets/scripts/one_dim_chain.jl" download><u>Julia script</u></a>.<h1 id="Fitting-model-parameters-in-a-1D-spin-1-ferromagnetic-chain"><a class="docs-heading-anchor" href="#Fitting-model-parameters-in-a-1D-spin-1-ferromagnetic-chain">Fitting model parameters in a 1D spin-1 ferromagnetic chain</a><a id="Fitting-model-parameters-in-a-1D-spin-1-ferromagnetic-chain-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting-model-parameters-in-a-1D-spin-1-ferromagnetic-chain" title="Permalink"></a></h1><pre><code class="language-julia hljs">using Sunny, LinearAlgebra, GLMakie, Optim</code></pre><p>In this Example, we consider a 1D chain of spin-1 sites. The sites along the chain interact via a ferromagnetic nearest-neighbor interaction <span>$J\sum_{\langle i,j\rangle} \mathbf{S}_i \cdot \mathbf{S}_j$</span>, with <span>$J &lt; 0$</span>. By default, the ground state would be ferromagnetic and highly degenerate, since the spins can align in any direction. An on-site interaction, <span>$D\sum_i (S^z_i)^2$</span> breaks this isotropy by making it easier for the spins to align in the <span>$\pm z$</span> direction than in any other orientation. Thus, the entire Hamiltonian is:</p><p><span>$\mathcal{H} = \overbrace{J\sum_{\langle i,j\rangle} \mathbf{S}_i \cdot \mathbf{S}_j}^{\text{Ferromagnetic}}\;\;\;\;\;\; \overbrace{-D\sum_i (S^z_i)^2}^{\text{Easy-axis single-ion anisotropy}}$</span></p><p>The goal of this Example is to illustrate how to determine the parameters <span>$J$</span> and <span>$D$</span> from &quot;experiment&quot; data by fitting using Sunny&#39;s implementation of Linear Spin Wave Theory. In our case, the &quot;experiment&quot; data will actually be simulation data produced using Landau-Lifschitz dynamics.</p><h2 id="Creating-simulated-&quot;experiment&quot;-data-using-Landau-Lifschitz-dynamics"><a class="docs-heading-anchor" href="#Creating-simulated-&quot;experiment&quot;-data-using-Landau-Lifschitz-dynamics">Creating simulated &quot;experiment&quot; data using Landau-Lifschitz dynamics</a><a id="Creating-simulated-&quot;experiment&quot;-data-using-Landau-Lifschitz-dynamics-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-simulated-&quot;experiment&quot;-data-using-Landau-Lifschitz-dynamics" title="Permalink"></a></h2><p>Our simulated data will use ground truth values <span>$J_0 = -1\,\text{meV}$</span> and <span>$D_0 = 10\,\text{meV}$</span> with a lattice spacing <span>$a = 10$</span> angstrom.</p><p>We begin with a 1D chain of spin-1 sites along the <span>$x$</span> direction.</p><pre><code class="language-julia hljs"># Establish geometry of the unit cell.
+# &quot;P1&quot; is required due to the rotational symmetry about the
+# x-axis being broken.
+chain_spacing = 10. # Angstrom
+latvecs = chain_spacing * I(3)
+one_dimensional_chain = Crystal(latvecs,[[0,0,0]],&quot;P1&quot;)
+
+# Establish geometry of the whole chain.
+chain_length = 16 # Number of atoms
+latsize = (chain_length,1,1) # 1D chain is Nx1x1 lattice
+spin_one_chain = System(one_dimensional_chain, latsize, [SpinInfo(1,S=1,g=2)], :SUN)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr4"><span class="sgr1">System [SU(3)]</span></span>
+Lattice: (16, 1, 1)×1
+</code></pre><p>Configure the nearest-neighbor interaction:</p><pre><code class="language-julia hljs"># Scalar J indicates J*(Sᵢ⋅Sⱼ)
+J_groundtruth = -1.
+
+# Interaction is with the left and right next neighbor along the chain (x-direction)
+nearest_neighbor_right = Bond(1,1,(1,0,0))
+nearest_neighbor_left = Bond(1,1,(-1,0,0))
+
+set_exchange!(spin_one_chain,J_groundtruth,nearest_neighbor_right)
+set_exchange!(spin_one_chain,J_groundtruth,nearest_neighbor_left)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[ Info: Overriding coupling for Bond(1, 1, [-1, 0, 0]).</code></pre><p>Configure the symmetry-breaking easy-axis term:</p><pre><code class="language-julia hljs">D_groundtruth = 10.
+Sz = spin_operators(spin_one_chain, 1)[3]
+set_onsite_coupling!(spin_one_chain, -D_groundtruth*Sz^2, 1)</code></pre><p>With the ground-truth hamiltonian in place, we use Sunny&#39;s classical dynamics to generate ficticious experiment data at temperature <code>kT = 0.1</code>.</p><pre><code class="language-julia hljs">Δt = 0.05/D_groundtruth
+λ = 0.1
+kT = 0.1
+langevin = Langevin(Δt; kT, λ);
+
+  Sunny.Plotting.plot_coherents(sys;quantization_axis = [0,0,1],kwargs...)
+randomize_spins!(spin_one_chain)
+viz_chain(spin_one_chain)</code></pre><img src="2438a4ee.png" alt="Example block output"/><p>In this plot, the z-axis has been used as the quantization axis for each site, with the up/down arrows and circle representing the <span>$\pm \hbar$</span> and <span>$0\hbar$</span> spin projections onto the z-axis respectively. The opacity of each object represents the probability (absolute value squared), and the color represents the phase. Since we are using classical dynamics to simulate the data, the phase will be mostly random.</p><p>First, we thermalize the chain, and then take several samples in order get reasonably good &quot;experiment&quot; data.</p><pre><code class="language-julia hljs"># ... thermalize ...
+viz_chain(spin_one_chain)</code></pre><img src="40d4edf7.png" alt="Example block output"/><pre><code class="language-julia hljs"># ... some time later ...
+viz_chain(spin_one_chain)</code></pre><img src="dcc647d4.png" alt="Example block output"/><pre><code class="language-julia hljs"># ... some time later ...
+viz_chain(spin_one_chain)</code></pre><img src="022b1ea0.png" alt="Example block output"/><pre><code class="language-julia hljs"># ... some time later ...
+viz_chain(spin_one_chain)</code></pre><img src="018656ad.png" alt="Example block output"/><p>Now that we have collected several samples,</p><pre><code class="language-julia hljs">sc</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr4"><span class="sgr1">SampledCorrelations</span></span> (361.175 KiB)
+[<span class="sgr1">S(q,ω)</span> | nω = 80, Δω = 0.2549 | 22 samples]
+Lattice: (16, 1, 1)×1
+6 correlations in SU(3) mode:
+╔ ⬤ ⬤ ⬤ Sx
+║ ⋅ ⬤ ⬤ Sy
+╚ ⋅ ⋅ ⬤ Sz
+</code></pre><p>we are ready to generate the intensity data. Since this is supposed to represent an experiment, the intensity data will go in a histogram:</p><pre><code class="language-julia hljs">SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS = unit_resolution_binning_parameters(sc)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr4"><span class="sgr1">Binning Parameters</span></span>
+<span class="sgr1">⊡    16 bins</span> from -0.031 to +0.969 along [+1.00 dx] (Δ = 0.062)
+<span class="sgr1">∫ Integrated</span> from -0.500 to +0.500 along [+1.00 dy] (Δ = 1.000)
+<span class="sgr1">∫ Integrated</span> from -0.500 to +0.500 along [+1.00 dz] (Δ = 1.000)
+<span class="sgr1">⊡    80 bins</span> from -0.127 to +20.268 along [+1.00 dE] (Δ = 0.255)
+</code></pre><p>Here&#39;s what the experiment data looks like:</p><pre><code class="language-julia hljs">formula = intensity_formula(sc,:perp;kT)
+is, counts = intensities_binned(sc,SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS,formula)
+
+SIMULATED_EXPERIMENT_DATA = (is ./ counts)[:,1,1,:]
+
+bcs = axes_bincenters(SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS)
+heatmap!(ax,bcs[1],bcs[4],log10.(SIMULATED_EXPERIMENT_DATA))</code></pre><img src="2b865bc6.png" alt="Example block output"/><h2 id="Fitting-to-the-experiment-data"><a class="docs-heading-anchor" href="#Fitting-to-the-experiment-data">Fitting to the experiment data</a><a id="Fitting-to-the-experiment-data-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting-to-the-experiment-data" title="Permalink"></a></h2><p>To fit this data, we first model the known aspects of the system in Sunny. The first steps are the same whether we are simulating a known system or modelling an unknown system:</p><pre><code class="language-julia hljs"># Same as before
+chain_spacing = 10. # Angstrom
+latvecs = chain_spacing * I(3)
+one_dimensional_chain = Crystal(latvecs,[[0,0,0]],&quot;P1&quot;)
+chain_length = 16 # Number of atoms
+latsize = (chain_length,1,1) # 1D chain is Nx1x1 lattice
+spin_one_chain = System(one_dimensional_chain, latsize, [SpinInfo(1,S=1,g=2)], :SUN)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr4"><span class="sgr1">System [SU(3)]</span></span>
+Lattice: (16, 1, 1)×1
+</code></pre><p>Originally, the next step would have been to configure the hamiltonian by specifying the <span>$J$</span> and <span>$D$</span> values. However, since these are unknowns, we will avoid using them as long as possible, and instead proceed to set up the bonds, spin operators, and <code>Langevin</code> integrator–none of which require the values:</p><pre><code class="language-julia hljs">Δt = 0.05
+λ = 0.1
+kT = 0. # LSWT uses zero temperature
+langevin = Langevin(Δt; kT, λ);
+
+nearest_neighbor_right = Bond(1,1,(1,0,0))
+nearest_neighbor_left = Bond(1,1,(-1,0,0))
+
+Sz = spin_operators(spin_one_chain, 1)[3]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3×3 Matrix{ComplexF64}:
+ 1.0+0.0im  0.0+0.0im   0.0+0.0im
+ 0.0+0.0im  0.0+0.0im   0.0+0.0im
+ 0.0+0.0im  0.0+0.0im  -1.0+0.0im</code></pre><p>After this setup work is done <em>once</em>, we create a function <code>forward_problem(J_trial,D_trial)</code> which will compute the Linear Spin Wave Theoretic spectrum at the trial values of the <span>$J$</span> and <span>$D$</span> fitting parameters. In other words, the part of the original calculation which depends on the fitting parameters gets wrapped into a function:</p><pre><code class="language-julia hljs">function forward_problem(J_trial, D_trial)
+
+  # Ensure there is no phase transition (or else LSWT will throw errors)
+  J_trial = min(J_trial,0)
+  D_trial = max(D_trial,0)
+
+  # Uses J_trial
+  set_exchange!(spin_one_chain,J_trial,nearest_neighbor_right)
+  set_exchange!(spin_one_chain,J_trial,nearest_neighbor_left)
+
+  # Uses D_trial
+  set_onsite_coupling!(spin_one_chain, -D_trial*Sz^2, 1)
+
+  # Perform spin wave calculation, continued below...</code></pre><p>Note that <code>forward_problem</code> refers to variables defined outside of the scope of the function. This allows us to reuse those variables in each call to <code>forward_problem</code>, without reconstructing them each time. In general, the more that is known about the system you are modelling, the later in the code <code>function forward_problem(...)</code> can be inserted, and the more setup work can be re-used.</p><div class="admonition is-success"><header class="admonition-header">`forward_problem` is a closure</header><div class="admonition-body"><p>In computer progrogramming parlance, <code>forward_problem</code> is said to &#39;capture&#39; variables such as <code>spin_one_chain</code> from the enviroment. Since the result of calling <code>forward_problem</code> depends not only on <code>J_trial</code> and <code>D_trial</code>, but also on <code>spin_one_chain</code>, it&#39;s no longer a function of only its arguments.</p><p>Since <code>forward_problem</code> is not a closed system, but <code>forward_problem + (captured variables)</code> <em>is</em> a closed system, the latter is called the &#39;closure&#39; of the former.</p></div></div><h2 id="Spin-wave-calculation"><a class="docs-heading-anchor" href="#Spin-wave-calculation">Spin wave calculation</a><a id="Spin-wave-calculation-1"></a><a class="docs-heading-anchor-permalink" href="#Spin-wave-calculation" title="Permalink"></a></h2><p>We can leverage our knowledge that the ground state should be ferromagnetic to simplify the spin wave calculation. Since the ferrommagnetic unit cell is just one site, the simplified system is extremely simple:</p><pre><code class="language-julia hljs">  # ... perform spin wave calculation, continued from above.
+  one_site_system = reshape_supercell(spin_one_chain,[1 0 0; 0 1 0; 0 0 1])</code></pre><p>After restricting to a single site, it&#39;s best to re-thermalize the system at zero temperature to ensure a good classical ground state for LSWT:</p><pre><code class="language-julia hljs">  langevin.kT = 0.
+  nStep = 1_000
+  for _ in 1:nStep
+      step!(one_site_system, langevin)
+  end</code></pre><p>The spin wave intensity data must be placed in a histogram with the same parameters as the experiment data, in order to ensure a good comparision.</p><p>The kernel and <code>intensities_bin_centers</code> used here are temporary, until a better binning method is written.</p><pre><code class="language-julia hljs">  swt = SpinWaveTheory(one_site_system)
+  formula = intensity_formula(swt,:perp; kernel = lorentzian(0.5))
+  params = SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS
+  is_swt = Sunny.intensities_bin_centers(swt, params, formula)
+
+  return is_swt[:,1,1,:]
+end # end of forward_problem</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">forward_problem (generic function with 1 method)</code></pre><p>We can see the different possible results from LSWT by plotting the dispersion:</p><pre><code class="language-julia hljs">function plot_forward(J,D)
+  is_swt = forward_problem(J,D)
+  bcs = axes_bincenters(SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS)
+  heatmap(bcs[1],bcs[4],log10.(is_swt))
+end
+
+plot_forward(-1,10)</code></pre><img src="934b10ed.png" alt="Example block output"/><pre><code class="language-julia hljs">plot_forward(-6,2)</code></pre><img src="d3dc59a9.png" alt="Example block output"/><pre><code class="language-julia hljs">plot_forward(-0.01,15)</code></pre><img src="b42e6904.png" alt="Example block output"/><p>Now, we can easily define a least-squares loss function comparing the &quot;experiment&quot; data to the LSWT result:</p><pre><code class="language-julia hljs">function get_loss(parameters)
+  J,D = parameters
+  is_swt = forward_problem(J,D)
+  sqrt(sum(abs2.(SIMULATED_EXPERIMENT_DATA .- is_swt)))
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">get_loss (generic function with 1 method)</code></pre><p>Sweeping the parameters over a range containing the true value reveals that the loss is minimized near the true parameters (dot). The minimum loss is not exactly at the ground truth parameters in this case. Gradient descent (finite-differenced) can be used to find the actual minimizer:</p><pre><code class="language-julia hljs">nJ = 30
+nD = 35
+loss_landscape = zeros(Float64,nJ,nD)
+Js = range(-2,0,length=nJ)
+Ds = range(8,12,length=nD)
+for (ij,J) in enumerate(Js)
+  for (id,D) in enumerate(Ds)
+    loss_landscape[ij,id] = get_loss([J,D])
+  end
+end
+
+fig = Figure()
+ax = Axis(fig[1,1],xlabel = &quot;J [meV]&quot;, ylabel = &quot;D [meV]&quot;)
+contourf!(ax,Js,Ds,loss_landscape)
+
+x0 = [-2,9.5]
+opt_result = optimize(get_loss,x0,method=GradientDescent(alphaguess=1e-3),store_trace=true,extended_trace = true,time_limit=10.)
+lines!(ax,Point2f.(Optim.x_trace(opt_result)))
+scatter!(ax,-1,10)
+fig</code></pre><img src="d59cb1ef.png" alt="Example block output"/><p>The fit can be verified by plotting the LSWT band structure over top of the experiment data:</p><pre><code class="language-julia hljs">bcs = axes_bincenters(SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS)
+heatmap!(ax,bcs[1],bcs[4],log10.(SIMULATED_EXPERIMENT_DATA), colormap = :deepsea)
+
+
+J_trial, D_trial = opt_result.minimizer
+
+
+
+params = SIMULATED_EXPERIMENT_HISTOGRAM_PARAMS
+
+path = [[q,0,0] for q in bcs[1]]
+disp, intensity = intensities_bands(swt, path, intensity_formula(swt,:perp, kernel = delta_function_kernel))
+
+for i in axes(disp)[2]
+    lines!(ax, bcs[1], disp[:,i]; color=intensity[:,i], colormap = :turbo,linewidth = 5,colorrange = (0.,1.))
+end
+Colorbar(f[1,2],colormap = :turbo, limits = (0.,1.))
+Colorbar(f[1,3],colormap = :deepsea, limits = (0.,1.))
+f</code></pre><img src="c2d47169.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../ising2d/">« Classical Ising model</a><a class="docs-footer-nextpage" href="../../library/">Library API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.0.1 on <span class="colophon-date" title="Tuesday 19 September 2023 01:45">Tuesday 19 September 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
