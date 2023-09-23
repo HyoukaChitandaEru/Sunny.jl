@@ -19,14 +19,14 @@ ex2 = J2 * [1.0 0.0 0.0;
             0.0 1.0 0.0;
             0.0 0.0 Δ]
 set_exchange!(sys, ex1, Bond(1, 1, [1, 0, 0]))
-set_exchange!(sys, ex2, Bond(1, 1, [1, 2, 0]));
+set_exchange!(sys, ex2, Bond(1, 1, [1, 2, 0]))
 
 h = 15.5
-field = set_external_field!(sys, [0.0 0.0 h]);
+field = set_external_field!(sys, [0.0 0.0 h])
 
 D = 19.0
 Sz = spin_operators(sys, 1)[3]
-set_onsite_coupling!(sys, D*Sz^2, 1);
+set_onsite_coupling!(sys, D*Sz^2, 1)
 
 randomize_spins!(sys)
 
@@ -36,7 +36,7 @@ randomize_spins!(sys)
             # accuracy isn't critical.
 kT = 0      # Target equilibrium temperature (meV)
 λ = 0.1     # Magnitude of coupling to thermal bath (dimensionless)
-integrator = Langevin(Δt; kT, λ);
+integrator = Langevin(Δt; kT, λ)
 
 τs = [4., 16, 256]  # Times to record snapshots
 frames = []         # Empty array to store snapshots
