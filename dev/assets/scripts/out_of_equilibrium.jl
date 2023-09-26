@@ -49,7 +49,7 @@ for i in eachindex(τs)
     push!(frames, copy(sys.coherents))     # Save a snapshot spin configuration
 end
 
-include(joinpath(pkgdir(Sunny), "examples", "extra", "plotting2d.jl"))
+include(pkgdir(Sunny, "examples", "extra", "plotting2d.jl"))
 
 function sun_berry_curvature(z₁, z₂, z₃)
     z₁, z₂, z₃ = normalize.((z₁, z₂, z₃))

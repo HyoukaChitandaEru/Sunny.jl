@@ -1,4 +1,4 @@
-using Sunny, Plots
+using Sunny, GLMakie
 
 a = 1
 latvecs = lattice_vectors(a,a,10a,90,90,90)
