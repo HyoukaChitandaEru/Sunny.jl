@@ -12,7 +12,7 @@ view_crystal(crystal, 7)
 latsize = (1,1,7)
 S = 5/2
 seed = 5
-sys = System(crystal, latsize, [SpinInfo(1; S, g=2)], :dipole; seed)
+sys = System(crystal, latsize, [SpinInfo(1; S, g=2)], :dipole)
 
 J₁ = 0.85
 J₂ = 0.24

@@ -1,9 +1,8 @@
 using Sunny, GLMakie
 
-a = b = 6.0 # (Å)
-c = 40.0
-latvecs = lattice_vectors(a, b, c, 90, 90, 120)
-crystal = Crystal(latvecs, [[1/2,0,0]], 147; types=["Cr"])
+a = 1
+latvecs = lattice_vectors(a, a, 10a, 90, 90, 120)
+crystal = Crystal(latvecs, [[1/2,0,0]], 147)
 
 S = 1
 sys = System(crystal, (3,3,1), [SpinInfo(1; S, g=2)], :dipole)
@@ -15,7 +14,7 @@ axis = [0,0,1]
 set_spiral_order_on_sublattice!(sys, 1; q, axis, S0=[cos(0),sin(0),0])
 set_spiral_order_on_sublattice!(sys, 2; q, axis, S0=[cos(0),sin(0),0])
 set_spiral_order_on_sublattice!(sys, 3; q, axis, S0=[cos(2π/3),sin(2π/3),0])
-plot_spins(sys; ghost_radius=30, orthographic=true)
+plot_spins(sys; dims=2)
 
 @assert energy_per_site(sys) ≈ (4/2)*J*S^2*cos(2π/3)
 
