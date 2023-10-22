@@ -58,8 +58,7 @@ set_exchange!(sys, [J′2apm 0.0    0.0;
                     0.0    0.0    J′2azz], Bond(1,1,[1,2,1]))
 
 D = 2.165
-S = spin_operators(sys, 1)
-set_onsite_coupling!(sys, -D*S[3]^2, 1)
+set_onsite_coupling!(sys, S -> -D*S[3]^2, 1)
 
 randomize_spins!(sys)
 minimize_energy!(sys)
