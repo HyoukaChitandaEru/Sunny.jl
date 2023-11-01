@@ -6,8 +6,7 @@ cryst = Crystal(latvecs, [[0,0,0]], 227, setting="1")
 
 view_crystal(cryst, 8.0)
 
-latsize = (2, 2, 2)
-seed = 0
+latsize = (1, 1, 1)
 S = 3/2
 J = 7.5413*meV_per_K # (~ 0.65 meV)
 sys = System(cryst, latsize, [SpinInfo(1; S, g=2)], :dipole; seed=0)
@@ -31,7 +30,7 @@ kernel = lorentzian(η)
 formfactors = [FormFactor("Co2")]
 formula = intensity_formula(swt, :perp; kernel, formfactors)
 
-qpoints = [[0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [0.5, 0.5, 0.0], [0.0, 0.0, 0.0]]
+qpoints = [[0, 0, 0], [1/2, 0, 0], [1/2, 1/2, 0], [0, 0, 0]]
 path, xticks = reciprocal_space_path(cryst, qpoints, 50)
 energies = collect(0:0.01:6)
 is = intensities_broadened(swt, path, energies, formula)
