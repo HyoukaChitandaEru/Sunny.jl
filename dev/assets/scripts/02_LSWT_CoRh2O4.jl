@@ -20,9 +20,12 @@ minimize_energy!(sys)
 s0 = sys.dipoles[1,1,1,1]
 plot_spins(sys; color=[s'*s0 for s in sys.dipoles])
 
-shape = cryst.latvecs \ cryst.prim_latvecs
+shape = [0 1 1;
+         1 0 1;
+         1 1 0] / 2
 sys_prim = reshape_supercell(sys, shape)
 @assert energy_per_site(sys_prim) ≈ -2J*S^2
+plot_spins(sys_prim; color=[s'*s0 for s in sys_prim.dipoles])
 
 swt = SpinWaveTheory(sys_prim)
 η = 0.4 # (meV)
