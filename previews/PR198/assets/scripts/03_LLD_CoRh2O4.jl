@@ -24,7 +24,7 @@ for _ in 1:1000
     step!(sys, langevin)
     push!(energies, energy_per_site(sys))
 end
-plot(energies, color=:blue, figure=(resolution=(600,300),), axis=(xlabel="Time steps", ylabel="Energy (meV)"))
+plot(energies, color=:blue, figure=(size=(600,300),), axis=(xlabel="Time steps", ylabel="Energy (meV)"))
 
 S_ref = sys.dipoles[1,1,1,1]
 plot_spins(sys; color=[s'*S_ref for s in sys.dipoles])
