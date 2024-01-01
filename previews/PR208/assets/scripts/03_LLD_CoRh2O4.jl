@@ -14,8 +14,8 @@ minimize_energy!(sys)
 sys = resize_supercell(sys, (10, 10, 10))
 @assert energy_per_site(sys) ≈ -2J*S^2
 
-Δt = 0.05/abs(J*S)   # Time step
-λ  = 0.1             # Dimensionless damping time-scale
+Δt = 0.05/abs(J*S)   # Integration timestep
+λ  = 0.2             # Dimensionless damping time-scale
 kT = 16 * meV_per_K  # 16K, a temperature slightly below ordering
 langevin = Langevin(Δt; λ, kT);
 
@@ -25,6 +25,8 @@ for _ in 1:1000
     push!(energies, energy_per_site(sys))
 end
 plot(energies, color=:blue, figure=(size=(600,300),), axis=(xlabel="Time steps", ylabel="Energy (meV)"))
+
+check_timestep(langevin; tol=1e-2)
 
 S_ref = sys.dipoles[1,1,1,1]
 plot_spins(sys; color=[s'*S_ref for s in sys.dipoles])

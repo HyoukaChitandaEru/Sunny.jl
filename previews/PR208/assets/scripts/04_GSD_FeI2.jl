@@ -35,20 +35,17 @@ D = 2.165#hide
 set_onsite_coupling!(sys, S -> -D*S[3]^2, 1)#hide
 sys
 
-Δt = 0.05/D    # Should be inversely proportional to the largest energy scale
-               # in the system. For FeI2, this is the easy-axis anisotropy,
-               # `D = 2.165` (meV). The prefactor 0.05 is relatively small,
-               # and achieves high accuracy.
-kT = 0.2       # Temperature of the thermal bath (meV).
-λ = 0.1        # This value is typically good for Monte Carlo sampling,
-               # independent of system details.
-
+Δt = 0.05/abs(D*1) # Integration timestep
+λ  = 0.2           # Dimensionless damping time-scale
+kT = 0.2           # Temperature in meV
 langevin = Langevin(Δt; kT, λ);
 
 randomize_spins!(sys)
 for _ in 1:20_000
     step!(sys, langevin)
 end
+
+check_timestep(langevin; tol=1e-2)
 
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
@@ -60,6 +57,8 @@ langevin.kT = kT
 for _ in 1:10_000
     step!(sys_large, langevin)
 end
+
+check_timestep(langevin; tol=1e-2)
 
 sc = dynamical_correlations(sys_large; Δt=2Δt, nω=120, ωmax=7.5)
 
