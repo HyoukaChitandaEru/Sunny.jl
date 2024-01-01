@@ -35,9 +35,9 @@ D = 2.165#hide
 set_onsite_coupling!(sys, S -> -D*S[3]^2, 1)#hide
 sys
 
-Δt = 0.05/abs(D*1) # Integration timestep
-λ  = 0.2           # Dimensionless damping time-scale
-kT = 0.2           # Temperature in meV
+Δt = 0.05/abs(D)  # Integration timestep
+λ  = 0.2          # Dimensionless damping time-scale
+kT = 0.2          # Temperature in meV
 langevin = Langevin(Δt; kT, λ);
 
 randomize_spins!(sys)
