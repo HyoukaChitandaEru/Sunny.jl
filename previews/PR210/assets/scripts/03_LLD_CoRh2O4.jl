@@ -14,8 +14,8 @@ minimize_energy!(sys)
 sys = resize_supercell(sys, (10, 10, 10))
 @assert energy_per_site(sys) ≈ -2J*S^2
 
-Δt = 0.05/abs(J*S)   # Time step
-λ  = 0.1             # Dimensionless damping time-scale
+Δt = 0.05/abs(J*S)   # Integration timestep
+λ  = 0.2             # Dimensionless damping time-scale
 kT = 16 * meV_per_K  # 16K, a temperature slightly below ordering
 langevin = Langevin(Δt; λ, kT);
 
