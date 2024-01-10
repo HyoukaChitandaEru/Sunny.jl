@@ -14,9 +14,12 @@ minimize_energy!(sys)
 sys = resize_supercell(sys, (10, 10, 10))
 @assert energy_per_site(sys) ≈ -2J*S^2
 
-Δt = 0.05/abs(J*S)   # Integration timestep
-λ  = 0.2             # Dimensionless damping time-scale
+λ  = 0.2             # Magnitude of damping (dimensionless)
 kT = 16 * meV_per_K  # 16K, a temperature slightly below ordering
+
+suggest_timestep(sys; tol=1e-2, λ, kT)
+
+Δt = 0.025
 langevin = Langevin(Δt; λ, kT);
 
 energies = [energy_per_site(sys)]
@@ -24,9 +27,11 @@ for _ in 1:1000
     step!(sys, langevin)
     push!(energies, energy_per_site(sys))
 end
-plot(energies, color=:blue, figure=(size=(600,300),), axis=(xlabel="Time steps", ylabel="Energy (meV)"))
 
-check_timestep(langevin; tol=1e-2)
+check_timestep(sys, langevin; tol=1e-2)
+langevin.Δt = 0.042
+
+plot(energies, color=:blue, figure=(size=(600,300),), axis=(xlabel="Timesteps", ylabel="Energy (meV)"))
 
 S_ref = sys.dipoles[1,1,1,1]
 plot_spins(sys; color=[s'*S_ref for s in sys.dipoles])
@@ -58,7 +63,8 @@ heatmap(q1s, q2s, iq;
     )
 )
 
-ωmax = 6.0  # Maximum  energy to resolve (meV)
+Δt = 2*langevin.Δt
+ωmax = 6.0  # Maximum energy to resolve (meV)
 nω = 50     # Number of energies to resolve
 sc = dynamical_correlations(sys; Δt, nω, ωmax, process_trajectory=:symmetrize)
 

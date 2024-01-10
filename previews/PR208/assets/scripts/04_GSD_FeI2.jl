@@ -35,18 +35,23 @@ D = 2.165#hide
 set_onsite_coupling!(sys, S -> -D*S[3]^2, 1)#hide
 sys
 
-S = 1
-Δt = 0.05/abs(D*S^2)  # Integration timestep
-λ  = 0.2              # Dimensionless damping time-scale
-kT = 0.2              # Temperature in meV
+randomize_spins!(sys)
+minimize_energy!(sys)
+plot_spins(sys; color=[s[3] for s in sys.dipoles])
+
+λ  = 0.2  # Dimensionless damping time-scale
+kT = 0.2  # Temperature in meV
+
+suggest_timestep(sys; tol=1e-2, λ, kT)
+
+Δt = 0.027
 langevin = Langevin(Δt; kT, λ);
 
-randomize_spins!(sys)
-for _ in 1:20_000
+for _ in 1:10_000
     step!(sys, langevin)
 end
 
-check_timestep(langevin; tol=1e-2)
+check_timestep(sys, langevin; tol=1e-2)
 
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
@@ -59,17 +64,21 @@ for _ in 1:10_000
     step!(sys_large, langevin)
 end
 
-check_timestep(langevin; tol=1e-2)
+check_timestep(sys_large, langevin; tol=1e-2)
+langevin.Δt = 0.040
 
-sc = dynamical_correlations(sys_large; Δt=2Δt, nω=120, ωmax=7.5)
+Δt = 2*langevin.Δt
+ωmax = 7.5  # Maximum energy to resolve (meV)
+nω = 120    # Number of energies to resolve
+sc = dynamical_correlations(sys_large; Δt, nω, ωmax)
 
-add_sample!(sc, sys_large)        # Accumulate the sample into `sc`
+add_sample!(sc, sys_large)
 
 for _ in 1:2
     for _ in 1:1000               # Enough steps to decorrelate spins
         step!(sys_large, langevin)
     end
-    add_sample!(sc, sys_large)    # Accumulate the sample into `sc`
+    add_sample!(sc, sys_large)
 end
 
 sc
