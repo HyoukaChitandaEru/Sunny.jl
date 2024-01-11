@@ -16,11 +16,10 @@ sys = resize_supercell(sys, (10, 10, 10))
 
 λ  = 0.2             # Magnitude of damping (dimensionless)
 kT = 16 * meV_per_K  # 16K, a temperature slightly below ordering
+langevin = Langevin(; λ, kT)
 
-suggest_timestep(sys; tol=1e-2, λ, kT)
-
-Δt = 0.025
-langevin = Langevin(Δt; λ, kT);
+suggest_timestep(sys, langevin; tol=1e-2)
+langevin.Δt = 0.025
 
 energies = [energy_per_site(sys)]
 for _ in 1:1000
@@ -28,7 +27,7 @@ for _ in 1:1000
     push!(energies, energy_per_site(sys))
 end
 
-check_timestep(sys, langevin; tol=1e-2)
+suggest_timestep(sys, langevin; tol=1e-2)
 langevin.Δt = 0.042
 
 plot(energies, color=:blue, figure=(size=(600,300),), axis=(xlabel="Timesteps", ylabel="Energy (meV)"))

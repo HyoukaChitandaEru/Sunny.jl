@@ -41,17 +41,16 @@ plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
 λ  = 0.2  # Dimensionless damping time-scale
 kT = 0.2  # Temperature in meV
+langevin = Langevin(; λ, kT)
 
-suggest_timestep(sys; tol=1e-2, λ, kT)
-
-Δt = 0.027
-langevin = Langevin(Δt; kT, λ);
+suggest_timestep(sys, langevin; tol=1e-2)
+langevin.Δt = 0.027
 
 for _ in 1:10_000
     step!(sys, langevin)
 end
 
-check_timestep(sys, langevin; tol=1e-2)
+suggest_timestep(sys, langevin; tol=1e-2)
 
 plot_spins(sys; color=[s[3] for s in sys.dipoles])
 
@@ -64,7 +63,7 @@ for _ in 1:10_000
     step!(sys_large, langevin)
 end
 
-check_timestep(sys_large, langevin; tol=1e-2)
+suggest_timestep(sys_large, langevin; tol=1e-2)
 langevin.Δt = 0.040
 
 Δt = 2*langevin.Δt
