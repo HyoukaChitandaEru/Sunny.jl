@@ -44,7 +44,7 @@ kT = 0.2  # Temperature in meV
 langevin = Langevin(; λ, kT)
 
 suggest_timestep(sys, langevin; tol=1e-2)
-langevin.Δt = 0.027
+langevin.Δt = 0.027;
 
 for _ in 1:10_000
     step!(sys, langevin)
@@ -64,7 +64,7 @@ for _ in 1:10_000
 end
 
 suggest_timestep(sys_large, langevin; tol=1e-2)
-langevin.Δt = 0.040
+langevin.Δt = 0.040;
 
 Δt = 2*langevin.Δt
 ωmax = 7.5  # Maximum energy to resolve (meV)
